@@ -1,5 +1,4 @@
 library(data.table)
-#TODO: simple, slow data acquisition version
 
 # Simple data acquisition (and slow) ----
 # read the whole data set
@@ -30,21 +29,43 @@ consDataSet <- consDataSet[order(as.POSIXct(paste(Date, Time, sep = " "),
                                             "%d/%m/%Y %H:%M:%S"))]
 
 # Open the PNG graphic device
-png(filename="plot3.png", width = 480, height = 480)
+png(filename="plot4.png", width = 480, height = 480)
+
+# set 2x2 plots
+par(mfrow = c(2, 2))
+plot(1:nrow(consDataSet), consDataSet$Global_active_power, 
+     type = "n", xaxt = "n", xlab = "", ylab = "Global Active Power")
+axis(1, at = seq(1, nrow(consDataSet) + 1, 60 * 24),
+     labels = strftime(seq(as.Date(consDataSet[1, "Date"][[1]], "%d/%m/%Y"),
+          as.Date(consDataSet[nrow(consDataSet), "Date"][[1]], "%d/%m/%Y") + 1, 1),
+          "%a"))
+lines(consDataSet$Global_active_power)
+
+plot(1:nrow(consDataSet), consDataSet$Voltage, 
+     type = "n", xaxt = "n", xlab = "datetime", ylab = "Voltage")
+axis(1, at = seq(1, nrow(consDataSet) + 1, 60 * 24),
+     labels = strftime(seq(as.Date(consDataSet[1, "Date"][[1]], "%d/%m/%Y"),
+          as.Date(consDataSet[nrow(consDataSet), "Date"][[1]], "%d/%m/%Y") + 1, 1),
+          "%a"))
+lines(consDataSet$Voltage)
+
 plot(1:nrow(consDataSet), consDataSet$Sub_metering_1, 
      type = "n", xaxt = "n", xlab = "", ylab = "Energy sub metering")
-# Label the day weeks where they change (each 60 * 24 minutes)
-axis(1, at = seq(1, nrow(consDataSet) + 1, 60 * 24), 
-     labels = strftime(seq(as.Date(consDataSet[1, "Date"][[1]], "%d/%m/%Y"), 
-                           as.Date(consDataSet[nrow(consDataSet), "Date"][[1]], "%d/%m/%Y") + 1, 1), 
-                       "%a"))
-# Build the graphs
+axis(1, at = seq(1, nrow(consDataSet) + 1, 60 * 24),
+     labels = strftime(seq(as.Date(consDataSet[1, "Date"][[1]], "%d/%m/%Y"),
+          as.Date(consDataSet[nrow(consDataSet), "Date"][[1]], "%d/%m/%Y") + 1, 1),
+          "%a"))
 lines(1:nrow(consDataSet), consDataSet$Sub_metering_1, col = "black")
 lines(1:nrow(consDataSet), consDataSet$Sub_metering_2, col = "red")
 lines(1:nrow(consDataSet), consDataSet$Sub_metering_3, col = "blue")
-legend("topright", legend = c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), 
-       col = c("black", "red", "blue"), lty = c(1, 1))
-# Add the legend
+
+plot(1:nrow(consDataSet), consDataSet$Global_reactive_power, 
+     type = "n", xaxt = "n", xlab = "datetime", ylab = "Global_reactive_power")
+axis(1, at = seq(1, nrow(consDataSet) + 1, 60 * 24),
+     labels = strftime(seq(as.Date(consDataSet[1, "Date"][[1]], "%d/%m/%Y"),
+          as.Date(consDataSet[nrow(consDataSet), "Date"][[1]], "%d/%m/%Y") + 1, 1),
+          "%a"))
+lines(consDataSet$Global_reactive_power, col = "black")
 
 # Save the file; close the device
 dev.off()
