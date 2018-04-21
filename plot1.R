@@ -16,8 +16,10 @@ rm(consumption)
 # end of simple data acquisition ----
 
 # A faster version of data acquisition using the data.table package. ----
+# It reads only those rows we really need.
+# The grep command has to be available.
 # library(data.table)
-# The grep command has to be available
+## Just read the first line to know the column names
 #colNames <- strsplit(readLines("household_power_consumption.txt", 1), ";")[[1]]
 #consDataSet <- fread("grep \"^[12]/2/2007\" household_power_consumption.txt", sep = ";", na.strings = "?",
 #                   col.names = colNames)

@@ -1,12 +1,29 @@
 library(data.table)
 #TODO: simple, slow data acquisition version
 
+# Simple data acquisition (and slow) ----
+# read the whole data set
+consumption <- read.table("household_power_consumption.txt", 
+                          header = TRUE, sep = ";", na.strings = "?", 
+                          colClasses = c("character", "character", 
+                                         "numeric", "numeric", "numeric", 
+                                         "numeric", "numeric", "numeric", "numeric"))
+# only take the two days we are interested in, convert to data.table, which is more efficient
+consDataSet <- as.data.table(
+    consumption[as.Date(consumption$Date, "%d/%m/%Y") == as.Date("2007-02-01", "%Y-%m-%d") 
+                | as.Date(consumption$Date, "%d/%m/%Y") == as.Date("2007-02-02", "%Y-%m-%d"),])
+# delete the large data frame, we don't need it
+rm(consumption)
+# end of simple acquisition ----
 
-# Read just the first line to know the column names
-colNames <- strsplit(readLines("household_power_consumption.txt", 1), ";")[[1]]
-# The grep command has to be available
-consDataSet <- fread("grep \"^[12]/2/2007\" household_power_consumption.txt", sep = ";", na.strings = "?",
-                   col.names = colNames)
+# A faster version of data acquisition using data.table and grep ----
+# It reads only those rows we really need.
+## Just read the first line to know the column names
+#colNames <- strsplit(readLines("household_power_consumption.txt", 1), ";")[[1]]
+## The grep command has to be available
+#consDataSet <- fread("grep \"^[12]/2/2007\" household_power_consumption.txt", sep = ";", na.strings = "?",
+#                   col.names = colNames)
+# end of the faster version of data acquisition ----
 
 # Order by date and time (just in case)
 consDataSet <- consDataSet[order(as.POSIXct(paste(Date, Time, sep = " "), 
