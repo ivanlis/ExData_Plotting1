@@ -58,6 +58,8 @@ axis(1, at = seq(1, nrow(consDataSet) + 1, 60 * 24),
 lines(1:nrow(consDataSet), consDataSet$Sub_metering_1, col = "black")
 lines(1:nrow(consDataSet), consDataSet$Sub_metering_2, col = "red")
 lines(1:nrow(consDataSet), consDataSet$Sub_metering_3, col = "blue")
+legend("topright", legend = c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), 
+       col = c("black", "red", "blue"), lty = c(1, 1))
 
 plot(1:nrow(consDataSet), consDataSet$Global_reactive_power, 
      type = "n", xaxt = "n", xlab = "datetime", ylab = "Global_reactive_power")
