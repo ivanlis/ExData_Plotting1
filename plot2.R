@@ -1,5 +1,4 @@
 library(data.table)
-#TODO: simple, slow data acquisition version
 
 # Simple data acquisition (and slow) ----
 # read the whole data set
